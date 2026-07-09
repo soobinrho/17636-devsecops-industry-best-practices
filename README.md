@@ -2,6 +2,8 @@
 
 `17636-D | 2026 | Professor Jonathan Aldrich | Soobin Rho`
 
+> I recommend you to read this file from GitHub: https://github.com/soobinrho/17636-devsecops-industry-best-practices
+
 <br>
 
 A pet store web app built alongside with the implementation of the current industry best practices in DevSecOps.
@@ -12,10 +14,10 @@ A pet store web app built alongside with the implementation of the current indus
 | --------------- | ----------- |
 | **Hetzner** | An Ubuntu box with 4 vCPU, 8GB RAM, and 80GB SSD. |
 | **Ansible** | Automation for deploying the infrastructure (Infrastructure as Code). |
-| **Jenkins** | Automation for continuous integration and continuous delivery. |
 | **ZAP (Zed Attack Proxy)** | Vulnerability scanning and penetration testing tool specialized for web applications. |
 | **Grafana** | Observability and data visualization platform that can ingest data from Prometheus, Elasticsearch, Postgres, etc. |
 | **Prometheus** | Monitoring and alerting toolkit that collect and store the metrics data. |
+| **Jenkins** | Automation for continuous integration and continuous delivery. |
 | **SonarQube** | Code static analysis for security and metrics. |
 
 <br>

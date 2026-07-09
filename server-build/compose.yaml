@@ -1,0 +1,38 @@
+services:
+  17636-jenkins:
+    image: jenkins/jenkins:lts
+    ports:
+      - "8080:8080"
+    networks:
+      - network-jenkins
+      - network-prometheus
+
+  17636-prometheus:
+    image: prom/prometheus:v3
+    ports:
+      - "9000:9000"
+    networks:
+      - network-prometheus
+      - network-jenkins
+    depends_on:
+      17636-pet-clinic:
+        condition: service_started
+
+  17636-grafana:
+    image: grafana/grafana:11.6.16
+    ports:
+      - "3000:3000"
+    networks:
+      - network-prometheus
+    depends_on:
+      17636-prometheus:
+        condition: service_started
+
+  17636-sonarqube:
+    image: sonarqube:26.7.0.124771-community
+    ports:
+      - "9090:9090"
+
+networks:
+  network-prometheus:
+  network-jenkins:
