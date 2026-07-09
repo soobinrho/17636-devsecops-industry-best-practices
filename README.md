@@ -12,13 +12,13 @@ A pet store web app built alongside with the implementation of the current indus
 
 | Service | Purpose |
 | --------------- | ----------- |
-| **Hetzner** | An Ubuntu box with 4 vCPU, 8GB RAM, and 80GB SSD. |
-| **Ansible** | Automation for deploying the infrastructure (Infrastructure as Code). |
-| **ZAP (Zed Attack Proxy)** | Vulnerability scanning and penetration testing tool specialized for web applications. |
-| **Grafana** | Observability and data visualization platform that can ingest data from Prometheus, Elasticsearch, Postgres, etc. |
-| **Prometheus** | Monitoring and alerting toolkit that collect and store the metrics data. |
 | **Jenkins** | Automation for continuous integration and continuous delivery. |
 | **SonarQube** | Code static analysis for security and metrics. |
+| **ZAP (Zed Attack Proxy)** | Vulnerability scanning and penetration testing tool specialized for web applications. |
+| **Prometheus** | Monitoring and alerting toolkit that collect and store the metrics data. |
+| **Grafana** | Observability and data visualization platform that can ingest data from Prometheus, Elasticsearch, Postgres, etc. |
+| **Ansible** | Automation for deploying the infrastructure (Infrastructure as Code). |
+| **Hetzner** | An Ubuntu box with 4 vCPU, 8GB RAM, and 80GB SSD. |
 
 <br>
 <br>
@@ -36,11 +36,33 @@ required to complete their assigned tasks ...
 
 <br>
 
+## Overview
+
+1. Whenever a commit is pushed to the `main` branch of this repository, Jenkins runs a pipeline for both **continuous integration** and **continuous deployment**.
+
+<br>
+
+2. The Jenkins pipeline first runs SonarQube to perform **static analysis** on every file in this repository. The CI/CD pipeline is visualized using the Jenkins plugin called Blue Ocean.
+
+<br>
+
+3. The pipeline then spawns a test instance of the pet clinic web app and performs **vulnerability scanning** and **penetration testing** on it using ZAP. When all of these steps are running for the pipeline, **metrics data** produced by Jenkins are ingested by Prometheus, which then sends the collected data to Grafana for observability and metrics-data visualization.
+
+<br>
+
+4. When all of these steps are successful, Jenkins then runs Ansible as IaC, **Infrastructure as Code**, to SSH into the prod server and deploy the pet clinic web app using Docker Compose consisting of the frontend for the pet clinic and an instance of Postgres for the backend.
+
+<br>
+
 ## How to deploy
 
-First, use Ansible to set up the infrastructure:
-
 ```bash
+# WIP
+pip install ansible
+
+# / WIP
+
+
 # TODO: Run these in Ansible.
 
 # Install the latest LTS (Long Term Support) version of OpenJDK,
