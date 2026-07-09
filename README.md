@@ -36,18 +36,33 @@ required to complete their assigned tasks ...
 
 ## How to deploy
 
+First, use Ansible to set up the infrastructure:
+
 ```bash
-# Build and deploy everything for this project.
+# TODO: Run these in Ansible.
+
+# Install the latest LTS (Long Term Support) version of OpenJDK,
+# which as of now is OpenJDK 21.
+sudo apt install openjdk-21-jdk
+
+# Install maven for building the pet clinic web app.
+sudo apt install maven
+
+# Clone this repository.
+git clone https://github.com/soobinrho/17636-devsecops-industry-best-practices.git
+cd 17636-devsecops-industry-best-practices
+```
+
+<br>
+
+Then, use Make for build and deploy the pet clinic web app, SonarQube, Prometheus, Grafana, ZAP, and Jenkins.
+
+```bash
+# This builds all required Docker images and deploys them.
 make all
 
-# Only run the build process.
-make build
-
-# Only run the deployment process.
-make deploy
-
-# Cleanup for after done with this project.
-make cleanup
+# Once the task is complete, cleanup the files.
+make cleanup-remove-containers cleanup-remove-images
 ```
 
 <br>
