@@ -51,6 +51,7 @@ sudo apt install maven
 # Clone this repository.
 git clone https://github.com/soobinrho/17636-devsecops-industry-best-practices.git
 cd 17636-devsecops-industry-best-practices
+git submodule update --init --recursive
 ```
 
 <br>
