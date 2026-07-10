@@ -6,18 +6,32 @@ services:
       - "50000:50000"
     networks:
       - network-jenkins
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       - volume-jenkins:/var/jenkins_home
-      - volume-sonarqube:/opt/sonarqube
       - /var/run/docker.sock:/var/run/docker.sock
     # Required because "permission denied while trying to connect to the docker API."
     privileged: true
     user: root
 
+  17636-sonarqube:
+    image: sonarqube:26.7.0.124771-community
+    ports:
+      - "9000:9000"
+    networks:
+      - network-jenkins
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - volume-sonarqube-data:/opt/sonarqube/data
+      - volume-sonarqube-extensions:/opt/sonarqube/extensions
+      - volume-sonarqube-logs:/opt/sonarqube/logs
+
   17636-prometheus:
     image: prom/prometheus:v3
     ports:
-      - "9000:9000"
+      - "9001:9000"
     networks:
       - network-jenkins
     depends_on:
@@ -33,15 +47,6 @@ services:
     depends_on:
       17636-prometheus:
         condition: service_started
-
-  17636-sonarqube:
-    image: sonarqube:26.7.0.124771-community
-    ports:
-      - "9090:9000"
-    networks:
-      - network-jenkins
-    volumes:
-      - volume-sonarqube:/opt/sonarqube
 
   # The pet clinic and the database are only required for the prod server,
   # and are not required to run here, since Jenkins will clone the repo
@@ -88,4 +93,6 @@ networks:
 
 volumes:
   volume-jenkins:
-  volume-sonarqube:
+  volume-sonarqube-data:
+  volume-sonarqube-extensions:
+  volume-sonarqube-logs:

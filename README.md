@@ -57,6 +57,72 @@ required to complete their assigned tasks ...
 ## How to deploy
 
 ```bash
+git clone https://github.com/soobinrho/17636-devsecops-industry-best-practices
+cd 17636-devsecops-industry-best-practices
+make start-build-pipeline
+
+# Initialize Jenkins.
+# -------------------
+cd server-build
+docker compose exec 17636-jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+
+# Create a user.
+# --------------
+# > http://localhost:8080
+# Username: <any>
+# Password: <any>
+
+# Install the required plugins.
+# -----------------------------
+# Settings (gear button at the top right) - Plugins - Available plugins - Search and install:
+# - Blue Ocean
+# - Docker
+# - Docker Pipeline
+# - SonarQube Scanner
+# - Ansible
+# Restart Jenkins when installation is complete and no jobs are running.
+
+# Initialize SonarQube.
+# ---------------------
+# > http://localhost:9000 with the default credentials of admin:admin
+# Administration - Security - Global Permissions:
+# Execute Analysis: Allow
+# Create Projects: Allow
+
+# Create a local project:
+# Project display name: 17636-petclinic
+# Project key: 17636-petclinic
+# Main branch name: main
+
+# My account (click the profile picture at the top corner) - Security - Generate Tokens:
+# Name: sonarqube-token
+# Type: Global Analysis Token
+
+# Add SonarQube connection information to Jenkins.
+# ------------------------------------------------
+# Source: https://docs.sonarsource.com/sonarqube-community-build/analyzing-source-code/ci-integration/jenkins-integration/global-setup
+# > http://localhost:8080
+# Settings - System - SonarQube installations - Add SonarQube:
+# Environment variables: True
+# Name: sonarqube
+# Server URL: http://17636-sonarqube:9000
+# Token Name: sonarqube-token
+# Click Save at the bottom of the page.
+
+# Settings - Tools - SonarQube Scanner installations:
+# Name: sonarqube
+# Install automatically: True
+# Click Save at the bottom.
+
+
+
+# GitHub project: https://github.com/soobinrho/17636-devsecops-industry-best-practices
+# Triggers - Poll SCM: H/15 * * * *
+# Pipeline - Pipeline script from SCM - Git: https://github.com/soobinrho/17636-devsecops-industry-best-practices
+# Branch Specifier: main
+# Sciript Path: ./server-build/Jenkinsfile
+# Save.
+
 # WIP
 pip install --include-deps ansible
 
@@ -66,40 +132,7 @@ ansible-galaxy collection install community.docker
 # Required for installing Docker Compose on the prod server.
 ansible-galaxy role install geerlingguy.docker
 
-git clone https://github.com/soobinrho/17636-devsecops-industry-best-practices
-cd 17636-devsecops-industry-best-practices
-make start-build-pipeline
 
-# Settings - Plugins - Available plugins - Search and install Blue Ocean, Ansible, Docker, Docker Pipeline, SonarQube Scanner
-
-# Connect SonarQube to Jenkins:
-# =============================
-# Go to http://localhost:9090
-# Administration - Users - Create User:
-# Administration - Global permissions:
-# Execute Analysis: Allow
-# Create Projects: Allow
-
-# My account - Security - Generate Tokens
-# Name: sonarqube-token
-# Type: Global Analysis Token
-
-# Settings - System - SonarQube installations - Add SonarQube:
-# Name: sonarqube
-# Server URL: http://localhost:9090
-# Token Name: sonarqube-token
-
-# Settings - Tools - SonarQube Scanner installations:
-# Name: sonarqube
-# =============================
-
-# GitHub project: https://github.com/soobinrho/17636-devsecops-industry-best-practices
-# Triggers - Poll SCM: H/15 * * * *
-# Pipeline - Pipeline script from SCM - Git: https://github.com/soobinrho/17636-devsecops-industry-best-practices
-# Branch Specifier: main
-# Sciript Path: ./server-build/Jenkinsfile
-# Save.
-# / WIP
 
 
 # TODO: Run these in Ansible.
