@@ -1,13 +1,16 @@
 #!make
 
-start-build-pipeline:	cleanup provision-jenkins-ssh-agent
+start-build-pipeline:	clean provision-jenkins-ssh-agent
 	cd server-build && \
 		docker compose up --build --force-recreate -d
-	echo '========================'
-	echo 'Jenkins Initial Password'
-	echo '========================'
 	cd server-build && \
-		docker compose exec 17636-jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+		if docker compose exec 17636-jenkins cat /var/jenkins_home/secrets/initialAdminPassword > /dev/null 2>&1; then \
+		echo; \
+		echo '========================'; \
+		echo 'Jenkins Initial Password'; \
+		echo '========================'; \
+		docker compose exec 17636-jenkins cat /var/jenkins_home/secrets/initialAdminPassword; \
+		fi
 
 provision-jenkins-ssh-agent:
 	yes | ssh-keygen -q -N "" -f ./server-build/17636-jenkins-ssh-build-agent.key
@@ -19,12 +22,15 @@ provision-jenkins-ssh-agent:
 # TODO: Automatically generate a random number -> random hash for
 # the pet clinic db password. Implement this after all core functionalities.
 
-cleanup:
+clean:
 	cd server-build && \
 	  docker compose down --remove-orphans || 1
 
-cleanup-remove-images:
+clean-remove-images:
 	docker images -aq --filter 'reference=soobinrho/17636-*' \
 		| xargs docker image rm --force
 
-.SILENT: start-build-pipeline
+.SILENT: start-build-pipeline \
+	clean \
+	provision-jenkins-ssh-agent
+
