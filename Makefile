@@ -1,6 +1,7 @@
 #!make
 
 start-build-pipeline:
+	cd server-build && docker compose down || 1
 	cd server-build && docker compose up -d
 
 cleanup-remove-containers:

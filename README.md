@@ -69,6 +69,14 @@ ansible-galaxy role install geerlingguy.docker
 git clone https://github.com/soobinrho/17636-devsecops-industry-best-practices
 cd 17636-devsecops-industry-best-practices
 make start-build-pipeline
+
+# Settings - Plugins - Available plugins - Search and install Blue Ocean, Ansible.
+
+# Triggers - Poll SCM: H/15 * * * *
+# Pipeline - Pipeline script from SCM - Git: https://github.com/soobinrho/17636-devsecops-industry-best-practices
+# Branch Specifier: */main
+# Sciript Path: ./server-build/Jenkinsfile
+# Save.
 # / WIP
 
 

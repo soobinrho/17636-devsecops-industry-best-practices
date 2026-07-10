@@ -1,0 +1,42 @@
+pipeline {
+    agent {
+        docker {
+            image 'eclipse-temurin:25' 
+        }
+    }
+    stages {
+        stage('clone') {
+            steps {
+                git branch: 'main', url: 'https://github.com/soobinrho/17636-devsecops-industry-best-practices.git'
+            }
+        }
+        stage('static-analysis') {
+            steps {
+                sh 'mvn --version'
+            }
+        }
+        stage('build') {
+            steps {
+                sh 'mvn --version'
+            }
+        }
+        stage('test') {
+            steps {
+                sh 'mvn --version'
+            }
+        }
+        stage('deploy') {
+            steps {
+                sh 'mvn --version'
+            }
+        }
+    }
+    post {
+        success {
+            echo '[INFO] Successful!'
+        }
+        failure {
+            echo '[ERROR] Pipeline has failed!'
+        }
+    }
+}

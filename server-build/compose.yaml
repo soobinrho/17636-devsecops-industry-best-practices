@@ -53,6 +53,7 @@ services:
       - network-pet-clinic
     environment:
       - SPRING_PROFILES_ACTIVE=postgres
+      - POSTGRES_PASS=petclinic
       - POSTGRES_USER=petclinic
       - POSTGRES_DB=petclinic
       - POSTGRES_URL=jdbc:postgresql://17636-postgres/petclinic
@@ -67,6 +68,7 @@ services:
     networks:
       - network-pet-clinic
     environment:
+      - POSTGRES_PASSWORD=petclinic
       - POSTGRES_USER=petclinic
       - PGUSER=petclinic
       - POSTGRES_DB=petclinic
