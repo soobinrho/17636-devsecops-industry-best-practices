@@ -67,7 +67,8 @@ ansible-galaxy collection install community.docker
 ansible-galaxy role install geerlingguy.docker
 
 git clone https://github.com/soobinrho/17636-devsecops-industry-best-practices
-cd server-build
+cd 17636-devsecops-industry-best-practices
+make start-build-pipeline
 # / WIP
 
 

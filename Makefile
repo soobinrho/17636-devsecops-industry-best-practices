@@ -1,6 +1,6 @@
 #!make
 
-start-jenkins:
+start-build-pipeline:
 	cd server-build && docker compose up -d
 
 cleanup-remove-containers:
