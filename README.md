@@ -73,13 +73,25 @@ make start-build-pipeline
 # Settings - Plugins - Available plugins - Search and install Blue Ocean, Ansible, Docker, Docker Pipeline, SonarQube Scanner
 
 # Connect SonarQube to Jenkins:
+# =============================
 # Go to http://localhost:9090
-# My account - Security - Generate Tokens - Global Analysis Token
+# Administration - Users - Create User:
+# Administration - Global permissions:
+# Execute Analysis: Allow
+# Create Projects: Allow
+
+# My account - Security - Generate Tokens
+# Name: sonarqube-token
+# Type: Global Analysis Token
 
 # Settings - System - SonarQube installations - Add SonarQube:
 # Name: sonarqube
 # Server URL: http://localhost:9090
 # Token Name: sonarqube-token
+
+# Settings - Tools - SonarQube Scanner installations:
+# Name: sonarqube
+# =============================
 
 # GitHub project: https://github.com/soobinrho/17636-devsecops-industry-best-practices
 # Triggers - Poll SCM: H/15 * * * *
@@ -115,6 +127,20 @@ make all
 
 # Once the task is complete, cleanup the files.
 make cleanup-remove-containers cleanup-remove-images
+```
+
+<br>
+
+## Useful Debugging Workflows
+
+```bash
+# A bug that took me hours to fix was where SonarQube container wasn't able to
+# communicate with the Jenkins container even though they were placed in the
+# same Docker Compose network. I had to go in there and do some manual plumbing
+# to understand what's happening there.
+cd server-build
+docker compose exec 17636-jenkins sh
+curl http://17636-sonarqube:9000/api/v2/analysis/version
 ```
 
 <br>

@@ -8,6 +8,7 @@ services:
       - network-jenkins
     volumes:
       - volume-jenkins:/var/jenkins_home
+      - volume-sonarqube:/opt/sonarqube
       - /var/run/docker.sock:/var/run/docker.sock
     # Required because "permission denied while trying to connect to the docker API."
     privileged: true
@@ -40,9 +41,7 @@ services:
     networks:
       - network-jenkins
     volumes:
-      - volume-sonarqube-data:/opt/sonarqube/data
-      - volume-sonarqube-extensions:/opt/sonarqube/extensions
-      - volume-sonarqube-logs:/opt/sonarqube/logs
+      - volume-sonarqube:/opt/sonarqube
 
   # The pet clinic and the database are only required for the prod server,
   # and are not required to run here, since Jenkins will clone the repo
@@ -89,6 +88,4 @@ networks:
 
 volumes:
   volume-jenkins:
-  volume-sonarqube-data:
-  volume-sonarqube-extensions:
-  volume-sonarqube-logs:
+  volume-sonarqube:
