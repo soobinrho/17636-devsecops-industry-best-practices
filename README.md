@@ -70,11 +70,11 @@ git clone https://github.com/soobinrho/17636-devsecops-industry-best-practices
 cd 17636-devsecops-industry-best-practices
 make start-build-pipeline
 
-# Settings - Plugins - Available plugins - Search and install Blue Ocean, Ansible.
+# Settings - Plugins - Available plugins - Search and install Blue Ocean, Ansible, Docker, Docker Pipeline
 
 # Triggers - Poll SCM: H/15 * * * *
 # Pipeline - Pipeline script from SCM - Git: https://github.com/soobinrho/17636-devsecops-industry-best-practices
-# Branch Specifier: */main
+# Branch Specifier: main
 # Sciript Path: ./server-build/Jenkinsfile
 # Save.
 # / WIP

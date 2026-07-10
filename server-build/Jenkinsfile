@@ -5,9 +5,9 @@ pipeline {
         }
     }
     stages {
-        stage('clone') {
+        stage('checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/soobinrho/17636-devsecops-industry-best-practices.git'
+                checkout scm
             }
         }
         stage('static-analysis') {

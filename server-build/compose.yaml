@@ -1,13 +1,17 @@
 services:
   17636-jenkins:
-    image: jenkins/jenkins:lts
+    build: .
     ports:
       - "8080:8080"
+      - "50000:50000"
     networks:
       - network-jenkins
     volumes:
       - volume-jenkins:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
+    # Required because "permission denied while trying to connect to the docker API."
+    privileged: true
+    user: root
 
   17636-prometheus:
     image: prom/prometheus:v3
