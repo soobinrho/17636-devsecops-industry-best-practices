@@ -36,12 +36,13 @@ services:
   17636-sonarqube:
     image: sonarqube:26.7.0.124771-community
     ports:
-      - "9090:9090"
+      - "9090:9000"
     networks:
       - network-jenkins
-    depends_on:
-      17636-jenkins:
-        condition: service_started
+    volumes:
+      - volume-sonarqube-data:/opt/sonarqube/data
+      - volume-sonarqube-extensions:/opt/sonarqube/extensions
+      - volume-sonarqube-logs:/opt/sonarqube/logs
 
   # The pet clinic and the database are only required for the prod server,
   # and are not required to run here, since Jenkins will clone the repo
@@ -88,3 +89,6 @@ networks:
 
 volumes:
   volume-jenkins:
+  volume-sonarqube-data:
+  volume-sonarqube-extensions:
+  volume-sonarqube-logs:

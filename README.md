@@ -70,8 +70,18 @@ git clone https://github.com/soobinrho/17636-devsecops-industry-best-practices
 cd 17636-devsecops-industry-best-practices
 make start-build-pipeline
 
-# Settings - Plugins - Available plugins - Search and install Blue Ocean, Ansible, Docker, Docker Pipeline
+# Settings - Plugins - Available plugins - Search and install Blue Ocean, Ansible, Docker, Docker Pipeline, SonarQube Scanner
 
+# Connect SonarQube to Jenkins:
+# Go to http://localhost:9090
+# My account - Security - Generate Tokens - Global Analysis Token
+
+# Settings - System - SonarQube installations - Add SonarQube:
+# Name: sonarqube
+# Server URL: http://localhost:9090
+# Token Name: sonarqube-token
+
+# GitHub project: https://github.com/soobinrho/17636-devsecops-industry-best-practices
 # Triggers - Poll SCM: H/15 * * * *
 # Pipeline - Pipeline script from SCM - Git: https://github.com/soobinrho/17636-devsecops-industry-best-practices
 # Branch Specifier: main

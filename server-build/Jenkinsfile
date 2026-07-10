@@ -6,23 +6,28 @@ pipeline {
     }
     stages {
         stage('static-analysis') {
+            environment {
+                scannerHome = tool 'sonarqube';
+            }
             steps {
-                sh 'mvn --version'
+                withSonarQubeEnv(credentialsId: 'sonarqube-token', installationName: 'sonarqube') {
+                    sh "${scannerHome}/bin/sonar-scanner"
+                }
             }
         }
         stage('build') {
             steps {
-                sh 'mvn --version'
+                sh 'pwd && whoami'
             }
         }
         stage('test') {
             steps {
-                sh 'mvn --version'
+                sh 'ls -l'
             }
         }
         stage('deploy') {
             steps {
-                sh 'mvn --version'
+                sh 'echo yes!'
             }
         }
     }
