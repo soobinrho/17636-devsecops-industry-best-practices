@@ -5,8 +5,8 @@
   tasks:
     - name: Export the pet clinic Docker image
       community.docker.docker_image_export:
-        name: soobinrho/17636-pet-clinic:latest
-        path: /tmp/docker_image_17636-pet-clinic.latest.tar
+        name: soobinrho/17636-petclinic:latest
+        path: /tmp/docker_image_17636-petclinic.latest.tar
 
 - name: Import the image and deploy it using Docker Compose
   hosts: server_prod
@@ -18,17 +18,17 @@
   tasks:
     - name: Download the exported Docker image
       ansible.builtin.copy:
-        path: /tmp/docker_image_17636-pet-clinic.latest.tar
-        dest: /tmp/docker_image_17636-pet-clinic.latest.tar
+        path: /tmp/docker_image_17636-petclinic.latest.tar
+        dest: /tmp/docker_image_17636-petclinic.latest.tar
         mode: '0644'
 
     - name: Import the pet clinic Docker image
       community.docker.docker_image_load:
-        path: /tmp/docker_image_17636-pet-clinic.latest.tar
+        path: /tmp/docker_image_17636-petclinic.latest.tar
 
     - name: Cleanup
       ansible.builtin.file:
-        path: /tmp/docker_image_17636-pet-clinic.latest.tar
+        path: /tmp/docker_image_17636-petclinic.latest.tar
         state: absent
 
     - name: Download the Docker Compose file

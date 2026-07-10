@@ -7,8 +7,8 @@ all:	build deploy
 build:
 	cd spring-petclinic && \
 		./mvnw spring-boot:build-image \
-			-Dspring-boot.build-image.imageName="soobinrho/17636-pet-clinic:${GIT_HASH}"
-	docker tag "soobinrho/17636-pet-clinic:${GIT_HASH}" 'soobinrho/17636-pet-clinic:latest'
+			-Dspring-boot.build-image.imageName="soobinrho/17636-petclinic:${GIT_HASH}"
+	docker tag "soobinrho/17636-petclinic:${GIT_HASH}" 'soobinrho/17636-petclinic:latest'
 
 deploy:
 	docker compose up

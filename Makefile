@@ -1,7 +1,7 @@
 #!make
 
 start-build-pipeline:
-	cd server-build && docker compose down || 1
+	cd server-build && docker compose down --remove-orphans || 1
 	cd server-build && docker compose up -d
 
 cleanup-remove-containers:
@@ -12,4 +12,4 @@ cleanup-remove-images:
 	docker images -aq --filter 'reference=soobinrho/17636-*' \
 		| xargs docker image rm --force
 
-.SILENT: start-jenkins
+.SILENT: start-build-pipeline

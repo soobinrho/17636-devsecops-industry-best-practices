@@ -1,10 +1,10 @@
 services:
-  17636-pet-clinic:
-    image: soobinrho/17636-pet-clinic:latest
+  17636-petclinic:
+    image: soobinrho/17636-petclinic:latest
     ports:
       - "80:8080"
     networks:
-      - network-pet-clinic
+      - network-petclinic
     environment:
       - SPRING_PROFILES_ACTIVE=postgres
       - POSTGRES_PASS=petclinic
@@ -20,7 +20,7 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - network-pet-clinic
+      - network-petclinic
     environment:
       - POSTGRES_PASSWORD=petclinic
       - POSTGRES_USER=petclinic
@@ -33,4 +33,4 @@ services:
       retries: 5
 
 networks:
-  network-pet-clinic:
+  network-petclinic:
