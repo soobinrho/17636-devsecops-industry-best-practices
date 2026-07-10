@@ -66,6 +66,8 @@ ansible-galaxy collection install community.docker
 # Required for installing Docker Compose on the prod server.
 ansible-galaxy role install geerlingguy.docker
 
+git clone https://github.com/soobinrho/17636-devsecops-industry-best-practices
+cd server-build
 # / WIP
 
 
