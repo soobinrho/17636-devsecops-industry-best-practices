@@ -21,4 +21,4 @@ cleanup-remove-images:
 	docker images -aq --filter 'reference=soobinrho/17636-*' \
 		| xargs docker image rm --force
 
-.SILENT: build deploy cleanup
+.SILENT: build deploy

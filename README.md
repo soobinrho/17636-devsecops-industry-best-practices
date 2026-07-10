@@ -58,7 +58,13 @@ required to complete their assigned tasks ...
 
 ```bash
 # WIP
-pip install ansible
+pip install --include-deps ansible
+
+# Required for running `docker compose up`
+ansible-galaxy collection install community.docker
+
+# Required for installing Docker Compose on the prod server.
+ansible-galaxy role install geerlingguy.docker
 
 # / WIP
 
