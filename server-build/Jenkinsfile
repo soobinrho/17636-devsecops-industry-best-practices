@@ -1,33 +1,38 @@
 pipeline {
-    agent {
-        docker {
-            image 'eclipse-temurin:25' 
-        }
-    }
+    agent any
     stages {
-        stage('static-analysis') {
+        stage('Static Analysis') {
             environment {
                 scannerHome = tool 'sonarqube';
             }
             steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    sh 'pwd && whoami'
+                    sh 'ls -la'
+                    sh 'env'
+                    sh 'uname -a'
+                    sh 'cat /etc/os-release'
+                    sh 'hostname'
+                    sh 'route'
+                }
                 withSonarQubeEnv(installationName: 'sonarqube') {
                     sh "${scannerHome}/bin/sonar-scanner"
                 }
             }
         }
-        stage('build') {
+        stage('Build') {
             steps {
-                sh 'pwd && whoami'
+                sh 'echo building...'
             }
         }
-        stage('test') {
+        stage('Vulnerability Scanning and Penetrating Testing') {
             steps {
-                sh 'ls -l'
+                sh 'echo security testing...'
             }
         }
-        stage('deploy') {
+        stage('Deploy') {
             steps {
-                sh 'echo yes!'
+                sh 'echo deploying...'
             }
         }
     }

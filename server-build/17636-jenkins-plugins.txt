@@ -1,0 +1,9 @@
+blueocean
+sonar
+ansible
+configuration-as-code
+json-path-api
+blueocean-pipeline-api-impl
+blueocean-rest-impl
+favorite
+token-macro

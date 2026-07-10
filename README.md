@@ -80,7 +80,7 @@ docker compose exec 17636-jenkins cat /var/jenkins_home/secrets/initialAdminPass
 # - Docker Pipeline
 # - SonarQube Scanner
 # - Ansible
-# Restart Jenkins when installation is complete and no jobs are running.
+# - Configuration as Code
 
 # Initialize SonarQube.
 # ---------------------
@@ -116,6 +116,8 @@ docker compose exec 17636-jenkins cat /var/jenkins_home/secrets/initialAdminPass
 
 
 
+# Add a new pipeline on Jenkins.
+# ------------------------------
 # GitHub project: https://github.com/soobinrho/17636-devsecops-industry-best-practices
 # Triggers - Poll SCM: H/15 * * * *
 # Pipeline - Pipeline script from SCM - Git: https://github.com/soobinrho/17636-devsecops-industry-best-practices

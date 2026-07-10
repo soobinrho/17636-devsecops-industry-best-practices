@@ -6,14 +6,23 @@ services:
       - "50000:50000"
     networks:
       - network-jenkins
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     volumes:
       - volume-jenkins:/var/jenkins_home
-      - /var/run/docker.sock:/var/run/docker.sock
+    # - /var/run/docker.sock:/var/run/docker.sock
     # Required because "permission denied while trying to connect to the docker API."
-    privileged: true
-    user: root
+    # privileged: true
+    # user: root
+    environment:
+      - JENKINS_EXT_URL=http://localhost:8080
+
+  17636-jenkins-ssh-build-agent:
+    image: jenkins/ssh-agent:jdk25
+    ports:
+      - "22:22"
+    networks:
+      - network-jenkins
+    env_file:
+      - ./.env.jenkins-ssh-build-agent
 
   17636-sonarqube:
     image: sonarqube:26.7.0.124771-community
@@ -21,32 +30,30 @@ services:
       - "9000:9000"
     networks:
       - network-jenkins
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     volumes:
       - volume-sonarqube-data:/opt/sonarqube/data
       - volume-sonarqube-extensions:/opt/sonarqube/extensions
       - volume-sonarqube-logs:/opt/sonarqube/logs
 
-  17636-prometheus:
-    image: prom/prometheus:v3
-    ports:
-      - "9001:9000"
-    networks:
-      - network-jenkins
-    depends_on:
-      17636-jenkins:
-        condition: service_started
-
-  17636-grafana:
-    image: grafana/grafana:11.6.16
-    ports:
-      - "3000:3000"
-    networks:
-      - network-jenkins
-    depends_on:
-      17636-prometheus:
-        condition: service_started
+  # 17636-prometheus:
+  #   image: prom/prometheus:v3
+  #   ports:
+  #     - "9001:9000"
+  #   networks:
+  #     - network-jenkins
+  #   depends_on:
+  #     17636-jenkins:
+  #       condition: service_started
+  #
+  # 17636-grafana:
+  #   image: grafana/grafana:11.6.16
+  #   ports:
+  #     - "3000:3000"
+  #   networks:
+  #     - network-jenkins
+  #   depends_on:
+  #     17636-prometheus:
+  #       condition: service_started
 
   # The pet clinic and the database are only required for the prod server,
   # and are not required to run here, since Jenkins will clone the repo
