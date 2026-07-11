@@ -4,6 +4,7 @@ ansible
 ssh-slaves
 ssh-agent
 ssh-credentials
+job-dsl
 configuration-as-code
 json-path-api
 blueocean-pipeline-api-impl

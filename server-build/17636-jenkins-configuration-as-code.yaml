@@ -1,3 +1,4 @@
+# Reference: http://<JENKINS_URL>/manage/configuration-as-code/reference
 jenkins:
   systemMessage: "Set up using Jenkins Configuration as Code."
   authorizationStrategy:
@@ -48,6 +49,22 @@ jobs:
   - script: |
       pipelineJob('17636-petclinic') {
         description('https://github.com/soobinrho/17636-devsecops-industry-best-practices')
+        logRotator {
+          numToKeep(10)
+        }
+        properties {
+          ownership {
+            primaryOwnerId("${JENKINS_ADMIN_USER}")
+          }
+          # Reference: https://github.com/jenkinsci/job-dsl-plugin/wiki/Migration#migrating-to-172
+          pipelineTriggers {
+            triggers {
+              cron {
+                spec('@hourly')
+              }
+            }
+          }
+        }
         definition {
           cpsScm {
             scm {
@@ -60,8 +77,5 @@ jobs:
             }
             scriptPath('./server-build/Jenkinsfile') 
           }
-        }
-        logRotator {
-          numToKeep(10)
         }
       }
