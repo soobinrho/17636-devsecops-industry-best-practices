@@ -80,7 +80,9 @@ make start-build-pipeline
 # Project key: 17636-petclinic
 # Main branch name: main
 
-# My account (click the profile picture at the top corner) - Security - Generate Tokens:
+# Create a SonarQube token.
+# -------------------------
+# http://localhost:9000/account/security
 # Name: sonarqube-token
 # Type: Global Analysis Token
 
