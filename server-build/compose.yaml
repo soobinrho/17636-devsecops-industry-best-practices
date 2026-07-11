@@ -27,16 +27,22 @@ services:
       - ./.env.jenkins-ssh-agent
       - ./.env.petclinic
 
-  # 17636-sonarqube:
-  #   image: sonarqube:26.7.0.124771-community
-  #   ports:
-  #     - "9000:9000"
-  #   networks:
-  #     - network-jenkins
-  #   volumes:
-  #     - 17636-volume-sonarqube-data:/opt/sonarqube/data
-  #     - 17636-volume-sonarqube-extensions:/opt/sonarqube/extensions
-  #     - 17636-volume-sonarqube-logs:/opt/sonarqube/logs
+  17636-sonarqube:
+    image: sonarqube:26.7.0.124771-community
+    ports:
+      - "9000:9000"
+    networks:
+      - network-jenkins
+    volumes:
+      - 17636-volume-sonarqube-data:/opt/sonarqube/data
+      - 17636-volume-sonarqube-extensions:/opt/sonarqube/extensions
+      - 17636-volume-sonarqube-logs:/opt/sonarqube/logs
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:9000/api/system/status | grep -q -e '\"status\":\"UP\"'"]
+      interval: 2s
+      timeout: 5s
+      retries: 20
+      start_period: 5s
 
   # 17636-prometheus:
   #   image: prom/prometheus:v3
@@ -95,9 +101,9 @@ services:
   #     - ./.env.petclinic
   #   healthcheck:
   #     test: ["CMD-SHELL", "pg_isready", "-d", "petclinic", "-U", "petclinic"]
-  #     interval: 5s
+  #     interval: 2s
   #     timeout: 5s
-  #     retries: 5
+  #     retries: 20
 
 networks:
   network-jenkins:
