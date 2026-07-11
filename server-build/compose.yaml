@@ -8,17 +8,13 @@ services:
       - network-jenkins
     volumes:
       - 17636-volume-jenkins:/var/jenkins_home
-    # - /var/run/docker.sock:/var/run/docker.sock
-    # Required because "permission denied while trying to connect to the docker API."
-    # privileged: true
-    # user: root
     environment:
       - CASC_JENKINS_CONFIG=/usr/share/jenkins/jenkins.yaml
     env_file:
       - ./.env.jenkins
 
   17636-jenkins-ssh-agent:
-    image: jenkins/ssh-agent:jdk25
+    image: jenkins/ssh-agent:latest-alpine-jdk21
     ports:
       - "22:22"
     networks:
@@ -37,11 +33,14 @@ services:
       - 17636-volume-sonarqube-data:/opt/sonarqube/data
       - 17636-volume-sonarqube-extensions:/opt/sonarqube/extensions
       - 17636-volume-sonarqube-logs:/opt/sonarqube/logs
+    # Reference: https://github.com/SonarSource/docker-sonarqube/blob/master/example-compose-files/sq-with-postgres/docker-compose.yml
+    tmpfs:
+      - /tmp:size=256M,mode=1777
     healthcheck:
       test: ["CMD-SHELL", "curl --fail http://localhost:9000/api/system/status | grep -q -e '\"status\":\"UP\"'"]
       interval: 2s
       timeout: 5s
-      retries: 20
+      retries: 50
       start_period: 5s
 
   # 17636-prometheus:

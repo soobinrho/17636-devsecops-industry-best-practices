@@ -1,21 +1,17 @@
 pipeline {
     agent {
-      label 'linux && ssh-agent'
+        label 'linux && ssh-agent'
     }
     stages {
         stage('Static Analysis') {
-            // environment {
-            //     scannerHome = tool 'sonarqube';
-            // }
             steps {
-                sh 'echo DEFAULT NODE'
-                sh 'env'
-                sh 'hostname'
-                sh 'pwd && whoami'
-                sh 'uname -a'
-                // withSonarQubeEnv(installationName: 'sonarqube') {
-                //     sh "${scannerHome}/bin/sonar-scanner"
-                // }
+                withSonarQubeEnv(installationName: 'sonarqube', credentialsId: 'sonarqube-token') {
+                    sh '''
+                        cd spring-petclinic
+                        ./mvnw clean install
+                        ./mvnw org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=petclinic
+                    '''
+                }
             }
         }
         stage('Build') {
