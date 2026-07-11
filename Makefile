@@ -43,6 +43,9 @@ clean:
 	cd server-build && \
 	  docker compose down --remove-orphans || 1
 
+clean-remove-volumes:
+	docker volume ls -q --filter 'name=17636-*' | xargs docker volume rm
+
 clean-remove-images:
 	docker images -aq --filter 'reference=soobinrho/17636-*' \
 		| xargs docker image rm --force
@@ -59,6 +62,7 @@ test-sh-in-postgres:
 	setup-env-files \
 	provision-jenkins-ssh-agent \
 	clean \
+	clean-remove-volumes \
 	clean-remove-images \
 	test-sh-in-jenkins \
 	test-sh-in-postgres

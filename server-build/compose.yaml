@@ -7,7 +7,7 @@ services:
     networks:
       - network-jenkins
     volumes:
-      - volume-jenkins:/var/jenkins_home
+      - 17636-volume-jenkins:/var/jenkins_home
     # - /var/run/docker.sock:/var/run/docker.sock
     # Required because "permission denied while trying to connect to the docker API."
     # privileged: true
@@ -34,9 +34,9 @@ services:
     networks:
       - network-jenkins
     volumes:
-      - volume-sonarqube-data:/opt/sonarqube/data
-      - volume-sonarqube-extensions:/opt/sonarqube/extensions
-      - volume-sonarqube-logs:/opt/sonarqube/logs
+      - 17636-volume-sonarqube-data:/opt/sonarqube/data
+      - 17636-volume-sonarqube-extensions:/opt/sonarqube/extensions
+      - 17636-volume-sonarqube-logs:/opt/sonarqube/logs
 
   # 17636-prometheus:
   #   image: prom/prometheus:v3
@@ -104,7 +104,7 @@ networks:
   network-petclinic:
 
 volumes:
-  volume-jenkins:
-  volume-sonarqube-data:
-  volume-sonarqube-extensions:
-  volume-sonarqube-logs:
+  17636-volume-jenkins:
+  17636-volume-sonarqube-data:
+  17636-volume-sonarqube-extensions:
+  17636-volume-sonarqube-logs:
