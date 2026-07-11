@@ -1,0 +1,8 @@
+jenkins:
+  systemMessage: "Set up using Jenkins Configuration as Code."
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: 17636-admin
+          password: ${JENKINS_ADMIN_PASS}

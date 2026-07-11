@@ -14,6 +14,9 @@ services:
     # user: root
     environment:
       - JENKINS_EXT_URL=http://localhost:8080
+      - CASC_JENKINS_CONFIG=/usr/share/jenkins/jenkins.yaml
+    env_file:
+      - ./.env.jenkins
 
   17636-jenkins-ssh-build-agent:
     image: jenkins/ssh-agent:jdk25
@@ -69,10 +72,11 @@ services:
       - network-petclinic
     environment:
       - SPRING_PROFILES_ACTIVE=postgres
-      - POSTGRES_PASS=petclinic
       - POSTGRES_USER=petclinic
       - POSTGRES_DB=petclinic
       - POSTGRES_URL=jdbc:postgresql://17636-postgres/petclinic
+    env_file:
+      - ./.env.petclinic
     depends_on:
       17636-postgres:
         condition: service_healthy
@@ -84,10 +88,11 @@ services:
     networks:
       - network-petclinic
     environment:
-      - POSTGRES_PASSWORD=petclinic
       - POSTGRES_USER=petclinic
       - PGUSER=petclinic
       - POSTGRES_DB=petclinic
+    env_file:
+      - ./.env.petclinic
     healthcheck:
       test: ["CMD-SHELL", "pg_isready", "-d", "petclinic", "-U", "petclinic"]
       interval: 5s

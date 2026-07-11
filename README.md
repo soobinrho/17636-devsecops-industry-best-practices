@@ -61,29 +61,15 @@ git clone https://github.com/soobinrho/17636-devsecops-industry-best-practices
 cd 17636-devsecops-industry-best-practices
 make start-build-pipeline
 
-# Initialize Jenkins.
-# -------------------
-cd server-build
-docker compose exec 17636-jenkins cat /var/jenkins_home/secrets/initialAdminPassword
-
-# Create a user.
-# --------------
+# Create a Jenkins user.
+# ----------------------
 # > http://localhost:8080
 # Username: <any>
 # Password: <any>
+# Full name: <any>
+# Email: <any>
+# Jenkins URL: http://localhost:8080/
 
-# Install the required plugins.
-# -----------------------------
-# Settings (gear button at the top right) - Plugins - Available plugins - Search and install:
-# - Blue Ocean
-# - Docker
-# - Docker Pipeline
-# - SonarQube Scanner
-# - Ansible
-# - Configuration as Code
-
-# Initialize SonarQube.
-# ---------------------
 # > http://localhost:9000 with the default credentials of admin:admin
 # Administration - Security - Global Permissions:
 # Execute Analysis: Allow
