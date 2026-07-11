@@ -1,8 +1,67 @@
 jenkins:
   systemMessage: "Set up using Jenkins Configuration as Code."
+  authorizationStrategy:
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: false
   securityRealm:
     local:
       allowsSignup: false
       users:
-        - id: 17636-admin
+        - id: ${JENKINS_ADMIN_USER}
           password: ${JENKINS_ADMIN_PASS}
+  nodes:
+    - permanent:
+        nodeName: "17636-jenkins-ssh-agent"
+        nodeDescription: "Provisioned by Docker Compose. This is Linux box running an SSH server."
+        labelString: "linux ssh-agent"
+        numExecutors: 1
+        remoteFS: "/home/jenkins/agent"
+        mode: NORMAL
+        launcher:
+          ssh:
+            credentialsId: "17636-jenkins-ssh-agent-key"
+            host: "17636-jenkins-ssh-agent"
+            port: 22
+            sshHostKeyVerificationStrategy:
+              manuallyTrustedKeyVerificationStrategy:
+                requireInitialManualTrust: false
+
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          - basicSSHUserPrivateKey:
+              scope: GLOBAL
+              id: "17636-jenkins-ssh-agent-key"
+              passphrase: ""
+              username: "jenkins"
+              description: "SSH private key for the Jenkins agent."
+              privateKeySource:
+                directEntry:
+                  privateKey: ${JENKINS_AGENT_SSH_PRIVATE_KEY}
+
+unclassified:
+  location:
+    url: ${JENKINS_URL_AND_PORT}
+
+jobs:
+  - script: |
+      pipelineJob('17636-petclinic') {
+        description('https://github.com/soobinrho/17636-devsecops-industry-best-practices')
+        definition {
+          cpsScm {
+            scm {
+              git {
+                remote {
+                  url('https://github.com/soobinrho/17636-devsecops-industry-best-practices')
+                }
+                branches('*/main')
+              }
+            }
+            scriptPath('./server-build/Jenkinsfile') 
+          }
+        }
+        logRotator {
+          numToKeep(10)
+        }
+      }

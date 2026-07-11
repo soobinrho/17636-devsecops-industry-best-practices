@@ -1,6 +1,9 @@
 blueocean
 sonar
 ansible
+ssh-slaves
+ssh-agent
+ssh-credentials
 configuration-as-code
 json-path-api
 blueocean-pipeline-api-impl

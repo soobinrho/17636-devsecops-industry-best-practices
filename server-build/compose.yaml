@@ -13,30 +13,30 @@ services:
     # privileged: true
     # user: root
     environment:
-      - JENKINS_EXT_URL=http://localhost:8080
       - CASC_JENKINS_CONFIG=/usr/share/jenkins/jenkins.yaml
     env_file:
       - ./.env.jenkins
 
-  17636-jenkins-ssh-build-agent:
+  17636-jenkins-ssh-agent:
     image: jenkins/ssh-agent:jdk25
     ports:
       - "22:22"
     networks:
       - network-jenkins
     env_file:
-      - ./.env.jenkins-ssh-build-agent
+      - ./.env.jenkins-ssh-agent
+      - ./.env.petclinic
 
-  17636-sonarqube:
-    image: sonarqube:26.7.0.124771-community
-    ports:
-      - "9000:9000"
-    networks:
-      - network-jenkins
-    volumes:
-      - 17636-volume-sonarqube-data:/opt/sonarqube/data
-      - 17636-volume-sonarqube-extensions:/opt/sonarqube/extensions
-      - 17636-volume-sonarqube-logs:/opt/sonarqube/logs
+  # 17636-sonarqube:
+  #   image: sonarqube:26.7.0.124771-community
+  #   ports:
+  #     - "9000:9000"
+  #   networks:
+  #     - network-jenkins
+  #   volumes:
+  #     - 17636-volume-sonarqube-data:/opt/sonarqube/data
+  #     - 17636-volume-sonarqube-extensions:/opt/sonarqube/extensions
+  #     - 17636-volume-sonarqube-logs:/opt/sonarqube/logs
 
   # 17636-prometheus:
   #   image: prom/prometheus:v3
@@ -64,40 +64,40 @@ services:
 
   # Nevertheless, these two are included here because the assignment's
   # requirement specifically calls for it.
-  17636-petclinic:
-    image: soobinrho/17636-petclinic:latest
-    ports:
-      - "80:8080"
-    networks:
-      - network-petclinic
-    environment:
-      - SPRING_PROFILES_ACTIVE=postgres
-      - POSTGRES_USER=petclinic
-      - POSTGRES_DB=petclinic
-      - POSTGRES_URL=jdbc:postgresql://17636-postgres/petclinic
-    env_file:
-      - ./.env.petclinic
-    depends_on:
-      17636-postgres:
-        condition: service_healthy
-
-  17636-postgres:
-    image: postgres:18.4
-    ports:
-      - "5432:5432"
-    networks:
-      - network-petclinic
-    environment:
-      - POSTGRES_USER=petclinic
-      - PGUSER=petclinic
-      - POSTGRES_DB=petclinic
-    env_file:
-      - ./.env.petclinic
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready", "-d", "petclinic", "-U", "petclinic"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+  # 17636-petclinic:
+  #   image: soobinrho/17636-petclinic:latest
+  #   ports:
+  #     - "80:8080"
+  #   networks:
+  #     - network-petclinic
+  #   environment:
+  #     - SPRING_PROFILES_ACTIVE=postgres
+  #     - POSTGRES_USER=petclinic
+  #     - POSTGRES_DB=petclinic
+  #     - POSTGRES_URL=jdbc:postgresql://17636-postgres/petclinic
+  #   env_file:
+  #     - ./.env.petclinic
+  #   depends_on:
+  #     17636-postgres:
+  #       condition: service_healthy
+  #
+  # 17636-postgres:
+  #   image: postgres:18.4
+  #   ports:
+  #     - "5432:5432"
+  #   networks:
+  #     - network-petclinic
+  #   environment:
+  #     - POSTGRES_USER=petclinic
+  #     - PGUSER=petclinic
+  #     - POSTGRES_DB=petclinic
+  #   env_file:
+  #     - ./.env.petclinic
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready", "-d", "petclinic", "-U", "petclinic"]
+  #     interval: 5s
+  #     timeout: 5s
+  #     retries: 5
 
 networks:
   network-jenkins:

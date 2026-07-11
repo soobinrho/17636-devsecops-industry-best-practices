@@ -1,23 +1,21 @@
 pipeline {
-    agent any
+    agent {
+      label 'linux && ssh-agent'
+    }
     stages {
         stage('Static Analysis') {
-            environment {
-                scannerHome = tool 'sonarqube';
-            }
+            // environment {
+            //     scannerHome = tool 'sonarqube';
+            // }
             steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    sh 'pwd && whoami'
-                    sh 'ls -la'
-                    sh 'env'
-                    sh 'uname -a'
-                    sh 'cat /etc/os-release'
-                    sh 'hostname'
-                    sh 'route'
-                }
-                withSonarQubeEnv(installationName: 'sonarqube') {
-                    sh "${scannerHome}/bin/sonar-scanner"
-                }
+                sh 'echo DEFAULT NODE'
+                sh 'env'
+                sh 'hostname'
+                sh 'pwd && whoami'
+                sh 'uname -a'
+                // withSonarQubeEnv(installationName: 'sonarqube') {
+                //     sh "${scannerHome}/bin/sonar-scanner"
+                // }
             }
         }
         stage('Build') {
