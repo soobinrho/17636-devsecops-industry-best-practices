@@ -3,14 +3,6 @@
 start-build-pipeline:	clean setup-env-files provision-jenkins-ssh-agent
 	cd server-build && \
 		docker compose up --build --force-recreate -d
-	cd server-build && \
-		if docker compose exec 17636-jenkins cat /var/jenkins_home/secrets/initialAdminPassword > /dev/null 2>&1; then \
-		echo; \
-		echo '========================'; \
-		echo 'Jenkins Initial Password'; \
-		echo '========================'; \
-		docker compose exec 17636-jenkins cat /var/jenkins_home/secrets/initialAdminPassword; \
-		fi
 
 setup-env-files:
 	if [ -f ./.env ]; then \
