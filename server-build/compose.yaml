@@ -77,7 +77,7 @@ services:
       - ./prometheus.yaml:/etc/prometheus/prometheus.yml
       - 17636-volume-prometheus:/prometheus
     healthcheck:
-      test: ["CMD-SHELL", "wget", "http://localhost:9090"]
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:9090/-/healthy"]
       interval: 2s
       timeout: 5s
       retries: 50
@@ -86,15 +86,32 @@ services:
       17636-jenkins:
         condition: service_healthy
 
-  # 17636-grafana:
-  #   image: grafana/grafana:11.6.16
-  #   ports:
-  #     - "3000:3000"
-  #   networks:
-  #     - network-jenkins
-  #   depends_on:
-  #     17636-prometheus:
-  #       condition: service_healthy
+  17636-grafana:
+    image: grafana/grafana:11.6
+    ports:
+      - "3000:3000"
+    networks:
+      - network-jenkins
+    volumes:
+      - 17636-volume-grafana:/var/lib/grafana
+      - ./grafana/provisioning/:/etc/grafana/provisioning/
+    env_file:
+      - ./.env.grafana
+    depends_on:
+      17636-prometheus:
+        condition: service_healthy
+
+  # This is required for monitoring the system CPU and memory usage.
+  17636-prometheus-node-exporter:
+    image: prom/node-exporter:v1
+    ports:
+      - "9100:9100"
+    networks:
+      - network-jenkins
+    volumes:
+      - /:/host:ro
+    command:
+      - '--path.rootfs=/host'
 
 networks:
   network-jenkins:
@@ -106,3 +123,4 @@ volumes:
   17636-volume-sonarqube-logs:
   17636-volume-zap:
   17636-volume-prometheus:
+  17636-volume-grafana:

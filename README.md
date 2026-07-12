@@ -6,19 +6,18 @@
 
 <br>
 
-A pet store web app built alongside with the implementation of the current industry best practices in DevSecOps.
+In this assignment, I deployed a Spring Boot sample project called Petclinic with a DevSecOps pipeline:
 
 <br>
 
 | Service | Purpose |
-| --------------- | ----------- |
-| **Jenkins** | Automation for continuous integration and continuous delivery. |
-| **SonarQube** | Code static analysis for security and metrics. |
-| **ZAP (Zed Attack Proxy)** | Vulnerability scanning and penetration testing tool specialized for web applications. |
-| **Prometheus** | Monitoring and alerting toolkit that collect and store the metrics data. |
-| **Grafana** | Observability and data visualization platform that can ingest data from Prometheus, Elasticsearch, Postgres, etc. |
-| **Ansible** | Automation for deploying the infrastructure (Infrastructure as Code). |
-| **Hetzner** | An Ubuntu box with 4 vCPU, 8GB RAM, and 80GB SSD. |
+| --------| ------- |
+| **Jenkins** | Enables continuous integration and continuous delivery. |
+| **SonarQube** | Performs static analysis on the codebase. |
+| **ZAP (Zed Attack Proxy)** | Conducts vulnerability scanning and penetration testing on a live web application as a security analysis part of the DevSecOps. Supports a myriad of plugins including reporting generation tools and OWASP PTK (Penetration Testing Kit). |
+| **Prometheus** | Metrics data collection toolkit. Also supports alerts based on custom rules. |
+| **Grafana** | Monitoring and data visualization platform that can ingest data from Prometheus, Elasticsearch, Postgres, etc. |
+| **Ansible** | Enables Infrastructure as Code. Used for deployment to the prod server. |
 
 <br>
 <br>
@@ -38,19 +37,19 @@ required to complete their assigned tasks ...
 
 ## Overview
 
-1. Whenever a commit is pushed to the `main` branch of this repository, Jenkins runs a pipeline for both **continuous integration** and **continuous deployment**.
+Whenever a commit is pushed to the `main` branch of this repository, Jenkins starts a CI/CD pipeline.
 
-<br>
-
-2. The Jenkins pipeline first runs SonarQube to perform **static analysis** on every file in this repository. The CI/CD pipeline is visualized using the Jenkins plugin called Blue Ocean.
-
-<br>
-
-3. The pipeline then spawns a test instance of the pet clinic web app and performs **vulnerability scanning** and **penetration testing** on it using ZAP. When all of these steps are running for the pipeline, **metrics data** produced by Jenkins are ingested by Prometheus, which then sends the collected data to Grafana for observability and metrics-data visualization.
-
-<br>
-
-4. When all of these steps are successful, Jenkins then runs Ansible as IaC, **Infrastructure as Code**, to SSH into the prod server and deploy the pet clinic web app using Docker Compose consisting of the frontend for the pet clinic and an instance of Postgres for the backend.
+```
+1. Repository Checkout (Git)
+->
+2. Static Analysis (SonarQube)
+->
+3. Vulnerability Scanning and Penetration Testing (ZAP and OWASP PTK)
+->
+4. Petclinic Web App Container Image Build (Docker)
+->
+5. Prod Deployment (Ansible)
+```
 
 <br>
 
@@ -59,59 +58,16 @@ required to complete their assigned tasks ...
 ```bash
 git clone https://github.com/soobinrho/17636-devsecops-industry-best-practices
 cd 17636-devsecops-industry-best-practices
+
+# The entirety of the piepeline has been scripted using Make. Under the hood,
+# `./Makefile` deploys and configures Jenkins based on the user-defined username
+# and password in `.env` and then creates a Jenkins SSH agent and connects this
+# as a Jenkins node so that it can be used for all pipeline activities.
+
+# All required Jenkins plugins are installed at Docker image build stage using
+# the Jenkins Configuration as Code plugin, as well as all of the required username
+# credentials (SSH private key for the Jenkins SSH agent and Jenkins login creds).
 make start-build-pipeline
-
-# Create a Jenkins user.
-# ----------------------
-# > http://localhost:8080
-# Username: <any>
-# Password: <any>
-# Full name: <any>
-# Email: <any>
-# Jenkins URL: http://localhost:8080/
-
-# > http://localhost:9000 with the default credentials of admin:admin
-# Administration - Security - Global Permissions:
-# Execute Analysis: Allow
-# Create Projects: Allow
-
-# Create a local project:
-# Project display name: 17636-petclinic
-# Project key: 17636-petclinic
-# Main branch name: main
-
-# Create a SonarQube token.
-# -------------------------
-# http://localhost:9000/account/security
-# Name: sonarqube-token
-# Type: Global Analysis Token
-
-# Add SonarQube connection information to Jenkins.
-# ------------------------------------------------
-# Source: https://docs.sonarsource.com/sonarqube-community-build/analyzing-source-code/ci-integration/jenkins-integration/global-setup
-# > http://localhost:8080
-# Settings - System - SonarQube installations - Add SonarQube:
-# Environment variables: True
-# Name: sonarqube
-# Server URL: http://17636-sonarqube:9000
-# Token Name: sonarqube-token
-# Click Save at the bottom of the page.
-
-# Settings - Tools - SonarQube Scanner installations:
-# Name: sonarqube
-# Install automatically: True
-# Click Save at the bottom.
-
-
-
-# Add a new pipeline on Jenkins.
-# ------------------------------
-# GitHub project: https://github.com/soobinrho/17636-devsecops-industry-best-practices
-# Triggers - Poll SCM: H/15 * * * *
-# Pipeline - Pipeline script from SCM - Git: https://github.com/soobinrho/17636-devsecops-industry-best-practices
-# Branch Specifier: main
-# Sciript Path: ./server-build/Jenkinsfile
-# Save.
 
 # WIP
 pip install --include-deps ansible
@@ -122,34 +78,11 @@ ansible-galaxy collection install community.docker
 # Required for installing Docker Compose on the prod server.
 ansible-galaxy role install geerlingguy.docker
 
-
-
-
 # TODO: Run these in Ansible.
 
 # Install the latest LTS (Long Term Support) version of OpenJDK,
 # which as of now is OpenJDK 21.
 sudo apt install openjdk-21-jdk
-
-# Install maven for building the pet clinic web app.
-sudo apt install maven
-
-# Clone this repository.
-git clone https://github.com/soobinrho/17636-devsecops-industry-best-practices.git
-cd 17636-devsecops-industry-best-practices
-git submodule update --init --recursive
-```
-
-<br>
-
-Then, use Make for build and deploy the pet clinic web app, SonarQube, Prometheus, Grafana, ZAP, and Jenkins.
-
-```bash
-# This builds all required Docker images and deploys them.
-make all
-
-# Once the task is complete, cleanup the files.
-make cleanup-remove-containers cleanup-remove-images
 ```
 
 <br>
@@ -159,11 +92,19 @@ make cleanup-remove-containers cleanup-remove-images
 ```bash
 # A bug that took me hours to fix was where SonarQube container wasn't able to
 # communicate with the Jenkins container even though they were placed in the
-# same Docker Compose network. I had to go in there and do some manual plumbing
-# to understand what's happening there.
-cd server-build
-docker compose exec 17636-jenkins sh
-curl http://17636-sonarqube:9000/api/v2/analysis/version
+# same Docker Compose network. Whenever manual plumbing is required in cases
+# like these, we can open up a shell session in each of the containers:
+make test-sh-in-jenkins-ssh-agent
+make test-sh-in-jenkins-ssh-agent
+make test-sh-in-jenkins
+
+# Whenever I implement a new feature, I use this one-liner to remove all Docker
+# volumes, build all required Docker images, and deploy them from scratch to
+# test if the codebase works in a clean slate.
+make reset
+
+# How to clean up all Docker volumes and images for this assignment afterwards.
+make clean clean-remove-volumes clean-remove-images
 ```
 
 <br>
