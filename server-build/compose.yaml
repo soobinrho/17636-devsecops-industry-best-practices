@@ -15,6 +15,12 @@ services:
       - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
     env_file:
       - ./.env.jenkins
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent http://localhost:8080/login | grep -q 'Jenkins' || exit 1"]
+      interval: 2s
+      timeout: 5s
+      retries: 50
+      start_period: 5s
 
   17636-jenkins-ssh-agent:
     build:
@@ -46,7 +52,7 @@ services:
       interval: 2s
       timeout: 5s
       retries: 50
-      start_period: 5s
+      start_period: 2s
 
   # Reference: https://www.zaproxy.org/docs/docker/about/
   17636-zap:
@@ -60,19 +66,26 @@ services:
       - network-jenkins
     volumes:
       - 17636-volume-zap:/zap/wrk
-    # environment:
-    #   - ZAP_WEBSWING_OPTS="-host 0.0.0.0 -port 8080"
 
-  # 17636-prometheus:
-  #   image: prom/prometheus:v3
-  #   ports:
-  #     - "9001:9000"
-  #   networks:
-  #     - network-jenkins
-  #   depends_on:
-  #     17636-jenkins:
-  #       condition: service_started
-  #
+  17636-prometheus:
+    image: prom/prometheus:v3
+    ports:
+      - "9090:9090"
+    networks:
+      - network-jenkins
+    volumes:
+      - ./prometheus.yaml:/etc/prometheus/prometheus.yml
+      - 17636-volume-prometheus:/prometheus
+    healthcheck:
+      test: ["CMD-SHELL", "wget", "http://localhost:9090"]
+      interval: 2s
+      timeout: 5s
+      retries: 50
+      start_period: 2s
+    depends_on:
+      17636-jenkins:
+        condition: service_healthy
+
   # 17636-grafana:
   #   image: grafana/grafana:11.6.16
   #   ports:
@@ -81,7 +94,7 @@ services:
   #     - network-jenkins
   #   depends_on:
   #     17636-prometheus:
-  #       condition: service_started
+  #       condition: service_healthy
 
 networks:
   network-jenkins:
@@ -92,3 +105,4 @@ volumes:
   17636-volume-sonarqube-extensions:
   17636-volume-sonarqube-logs:
   17636-volume-zap:
+  17636-volume-prometheus:

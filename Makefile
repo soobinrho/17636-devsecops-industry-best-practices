@@ -120,7 +120,8 @@ docker-compose-up:
 		docker compose up --build --force-recreate -d \
 			17636-jenkins \
 			17636-jenkins-ssh-agent \
-			17636-zap
+			17636-zap \
+			17636-prometheus
 
 logs:
 	cd server-build && \

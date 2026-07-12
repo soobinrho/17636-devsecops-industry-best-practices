@@ -59,6 +59,13 @@ unclassified:
       triggers:
         skipScmCause: false
         skipUpstreamCause: false
+  prometheusConfiguration:
+    collectCodeCoverage: false
+    collectDiskUsage: true
+    collectNodeStatus: true
+    collectingMetricsPeriodInSeconds: 5
+    path: "prometheus"
+    useAuthenticatedEndpoint: false
 
 # Reference: http://localhost:8080/manage/configuration-as-code/viewExport
 tool:
