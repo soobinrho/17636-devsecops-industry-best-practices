@@ -12,6 +12,7 @@ services:
       - 17636-volume-jenkins:/var/jenkins_home
     environment:
       - CASC_JENKINS_CONFIG=/usr/share/jenkins/jenkins.yaml
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
     env_file:
       - ./.env.jenkins
 

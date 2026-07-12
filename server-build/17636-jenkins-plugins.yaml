@@ -1,0 +1,62 @@
+plugins:
+  # ===========
+  # Added by me
+  # ===========
+  - artifactId: configuration-as-code
+  - artifactId: job-dsl
+  - artifactId: ssh-slaves
+  - artifactId: ssh-agent
+  - artifactId: ssh-credentials
+  - artifactId: blueocean
+  - artifactId: blueocean-pipeline-api-impl
+  - artifactId: blueocean-rest-impl
+  - artifactId: sonar
+  - artifactId: htmlpublisher
+  - artifactId: prometheus
+  - artifactId: metrics
+  - artifactId: ansible
+
+  # ===================================
+  # Required Dependencies for the Above
+  # ===================================
+  - artifactId: json-path-api
+  - artifactId: favorite
+  - artifactId: token-macro
+
+  # ===========================
+  # Jenkins Recommended Plugins
+  # ===========================
+  # Source: https://github.com/jenkinsci/jenkins/blob/master/core/src/main/resources/jenkins/install/platform-plugins.json
+  # Category: Organization and Administration
+  - artifactId: cloudbees-folder
+  - artifactId: antisamy-markup-formatter
+
+  # Category: Build Features
+  - artifactId: build-timeout
+  - artifactId: credentials-binding
+  - artifactId: timestamper
+  - artifactId: ws-cleanup
+
+  # Category: Build Tools
+  - artifactId: ant
+  - artifactId: gradle
+
+  # Category: Pipelines and Continuous Delivery
+  - artifactId: workflow-aggregator
+  - artifactId: github-branch-source
+  - artifactId: pipeline-github-lib
+  - artifactId: pipeline-graph-view
+
+  # Category: Source Code Management
+  - artifactId: git
+
+  # Category: User Management and Security
+  - artifactId: matrix-auth
+  - artifactId: ldap
+
+  # Category: Notifications and Publishing
+  - artifactId: email-ext
+  - artifactId: mailer
+
+  # Category: Appearance
+  - artifactId: dark-theme

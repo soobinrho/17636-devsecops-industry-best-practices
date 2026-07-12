@@ -2,8 +2,8 @@ FROM jenkins/jenkins:lts-jdk25
 
 # How to manage Jenkins plugins:
 #   https://www.jenkins.io/blog/2023/06/20/remove-outdated-plugins-while-using-docker/
-COPY --chown=jenkins:jenkins ./17636-jenkins-plugins.txt /usr/share/jenkins/plugins.txt
-RUN jenkins-plugin-cli --plugin-file=/usr/share/jenkins/plugins.txt
+COPY --chown=jenkins:jenkins ./17636-jenkins-plugins.yaml /usr/share/jenkins/plugins.yaml
+RUN jenkins-plugin-cli --plugin-file=/usr/share/jenkins/plugins.yaml
 
 # How to configure Jenkins Configuration as Code.
 #   https://github.com/jenkinsci/configuration-as-code-plugin/
