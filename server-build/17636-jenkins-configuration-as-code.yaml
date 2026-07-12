@@ -74,7 +74,7 @@ tool:
 jobs:
   - script: |
       pipelineJob('17636-petclinic') {
-        description('https://github.com/soobinrho/17636-devsecops-industry-best-practices')
+        description('SCM: https://github.com/soobinrho/17636-devsecops-industry-best-practices')
         logRotator {
           numToKeep(10)
         }

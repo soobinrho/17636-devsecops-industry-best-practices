@@ -1,3 +1,13 @@
 FROM jenkins/ssh-agent:latest-alpine-jdk21
 RUN apk update && \
-    apk add --no-cache zaproxy
+    apk add --no-cache \
+    firefox \
+    zaproxy && \
+    zaproxy -cmd -addoninstall report && \
+    zaproxy -cmd -addoninstall client && \
+    zaproxy -cmd -addoninstall automation && \
+    zaproxy -cmd -addoninstall ptk
+RUN mkdir --parent /home/jenkins/agent/workspace && \
+    chown -R jenkins:jenkins /home/jenkins/agent/workspace
+COPY ./zap-owasp-penetration-testing-kit.yaml /home/jenkins/agent/workspace/
+RUN chown jenkins:jenkins /home/jenkins/agent/workspace/zap-owasp-penetration-testing-kit.yaml

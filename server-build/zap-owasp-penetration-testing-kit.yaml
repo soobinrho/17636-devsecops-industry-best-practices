@@ -1,0 +1,25 @@
+---
+env:
+  contexts:
+  - name: "default"
+    urls:
+        - "http://localhost:8080"
+  parameters:
+    failOnError: true
+    progressToStdout: true
+
+jobs:
+- type: spider
+- type: spiderClient
+  parameters:
+    browserId: "firefox-headless"
+    numberOfBrowsers: 2
+- type: passiveScan-wait
+- type: activeScan
+# Reference: https://www.zaproxy.org/docs/desktop/addons/report-generation/templates/
+- type: report
+  parameters:
+    template: "high-level-report"
+    reportDescription: "ZAP + OWASP Penetrationg Testing Kit. Reference: https://www.zaproxy.org/blog/2026-06-29-even-more-owasp-ptk-integration-with-zap/"
+    reportDir: "/home/jenkins/agent/workspace"
+    reportFile: "petclinic.html"

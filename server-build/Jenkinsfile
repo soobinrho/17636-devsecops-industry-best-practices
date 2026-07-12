@@ -22,15 +22,13 @@ pipeline {
                 '''
             }
         }
-        stage('Vulnerability Scanning') {
+        stage('Penetration Testing') {
             steps {
-                sh '''
-                    pwd
-                    zaproxy -cmd -quickurl http://localhost:8080 -quickprogress -port 9999 -quickout /home/jenkins/agent/workspace/zap-report-petclinic.html -config reports.template=modern
-                '''
+                // Reference: https://www.zaproxy.org/blog/2026-06-29-even-more-owasp-ptk-integration-with-zap/
+                sh('zaproxy -cmd -autorun /home/jenkins/agent/workspace/zap-owasp-penetration-testing-kit.yaml -port 9999')
             }
         }
-        stage('Report Generation for Vulnerability Scanning') {
+        stage('Report Generation') {
             steps {
                 publishHTML (
                     target : [
@@ -38,15 +36,14 @@ pipeline {
                         alwaysLinkToLastBuild: true,
                         keepAll: false,
                         reportDir: '/home/jenkins/agent/workspace',
-                        reportFiles: 'zap-report-petclinic.html',
-                        reportName: 'ZAP Vulnerability Scanning Results',
-                        reportTitles: 'ZAP Vulnerability Scanning Results'
+                        reportFiles: 'petclinic.html',
+                        reportName: 'Vulnerability Scanning and Penetration Testing',
+                        reportTitles: 'Vulnerability Scanning and Penetration Testing'
                     ]
                 )
             }
         }
-
-        stage('Deploy') {
+        stage('Prod Deployment') {
             steps {
                 sh 'echo deploying...'
             }
