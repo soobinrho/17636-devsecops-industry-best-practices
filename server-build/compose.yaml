@@ -1,6 +1,8 @@
 services:
   17636-jenkins:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.jenkins
     ports:
       - "8080:8080"
       - "50000:50000"
@@ -14,7 +16,9 @@ services:
       - ./.env.jenkins
 
   17636-jenkins-ssh-agent:
-    image: jenkins/ssh-agent:latest-alpine-jdk21
+    build:
+      context: .
+      dockerfile: Dockerfile.jenkins-ssh-agent
     ports:
       - "22:22"
     networks:
@@ -42,6 +46,21 @@ services:
       timeout: 5s
       retries: 50
       start_period: 5s
+
+  # Reference: https://www.zaproxy.org/docs/docker/about/
+  17636-zap:
+    image: ghcr.io/zaproxy/zaproxy:stable
+    user: zap
+    ports:
+      - "8081:8080"
+      - "8090:8090"
+    command: zap-webswing.sh
+    networks:
+      - network-jenkins
+    volumes:
+      - 17636-volume-zap:/zap/wrk
+    # environment:
+    #   - ZAP_WEBSWING_OPTS="-host 0.0.0.0 -port 8080"
 
   # 17636-prometheus:
   #   image: prom/prometheus:v3
@@ -71,3 +90,4 @@ volumes:
   17636-volume-sonarqube-data:
   17636-volume-sonarqube-extensions:
   17636-volume-sonarqube-logs:
+  17636-volume-zap:

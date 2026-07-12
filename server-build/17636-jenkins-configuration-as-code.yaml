@@ -4,6 +4,7 @@ jenkins:
   authorizationStrategy:
     loggedInUsersCanDoAnything:
       allowAnonymousRead: false
+  numExecutors: 0
   securityRealm:
     local:
       allowsSignup: false
@@ -78,9 +79,6 @@ jobs:
           numToKeep(10)
         }
         properties {
-          ownership {
-            primaryOwnerId("${JENKINS_ADMIN_USER}")
-          }
           // Reference: https://github.com/jenkinsci/job-dsl-plugin/wiki/Migration#migrating-to-172
           pipelineTriggers {
             triggers {

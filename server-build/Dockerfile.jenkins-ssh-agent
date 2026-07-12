@@ -1,0 +1,3 @@
+FROM jenkins/ssh-agent:latest-alpine-jdk21
+RUN apk update && \
+    apk add --no-cache zaproxy

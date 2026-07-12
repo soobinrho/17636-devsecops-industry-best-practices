@@ -16,14 +16,36 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh 'echo building...'
+                sh '''
+                    cd spring-petclinic
+                    ./mvnw spring-boot:start
+                '''
             }
         }
-        stage('Vulnerability Scanning and Penetrating Testing') {
+        stage('Vulnerability Scanning') {
             steps {
-                sh 'echo security testing...'
+                sh '''
+                    pwd
+                    zaproxy -cmd -quickurl http://localhost:8080 -quickprogress -port 9999 -quickout /home/jenkins/agent/workspace/zap-report-petclinic.html -config reports.template=modern
+                '''
             }
         }
+        stage('Report Generation for Vulnerability Scanning') {
+            steps {
+                publishHTML (
+                    target : [
+                        allowMissing: false,
+                        alwaysLinkToLastBuild: true,
+                        keepAll: false,
+                        reportDir: '/home/jenkins/agent/workspace',
+                        reportFiles: 'zap-report-petclinic.html',
+                        reportName: 'ZAP Vulnerability Scanning Results',
+                        reportTitles: 'ZAP Vulnerability Scanning Results'
+                    ]
+                )
+            }
+        }
+
         stage('Deploy') {
             steps {
                 sh 'echo deploying...'
@@ -31,6 +53,12 @@ pipeline {
         }
     }
     post {
+        always {
+            sh '''
+                cd spring-petclinic
+                ./mvnw spring-boot:stop
+            '''
+        }
         success {
             echo '[INFO] Successful!'
         }

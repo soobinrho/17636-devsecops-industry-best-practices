@@ -6,6 +6,7 @@ ssh-agent
 ssh-credentials
 job-dsl
 configuration-as-code
+htmlpublisher
 json-path-api
 blueocean-pipeline-api-impl
 blueocean-rest-impl

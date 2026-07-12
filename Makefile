@@ -117,9 +117,10 @@ setup-env-file-petclinic:
 
 docker-compose-up:
 	cd server-build && \
-		docker compose up --build --force-recreate --wait -d \
+		docker compose up --build --force-recreate -d \
 			17636-jenkins \
-			17636-jenkins-ssh-agent
+			17636-jenkins-ssh-agent \
+			17636-zap
 
 logs:
 	cd server-build && \
@@ -152,6 +153,10 @@ test-sh-in-jenkins-ssh-agent:
 	cd server-build && \
 		docker compose exec 17636-jenkins-ssh-agent bash
 
+test-sh-in-zap:
+	cd server-build && \
+		docker compose exec 17636-zap bash
+
 test-sh-in-postgres:
 	cd server-build && \
 		docker compose exec 17636-postgres bash
@@ -173,5 +178,6 @@ test-sh-in-postgres:
 	clean-remove-images \
 	test-sh-in-jenkins \
 	test-sh-in-jenkins-ssh-agent \
+	test-sh-in-zap \
 	test-sh-in-postgres
 
