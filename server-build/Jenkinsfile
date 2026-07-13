@@ -37,7 +37,7 @@ pipeline {
                 ansiblePlaybook(
                     credentialsId: '17636-prod-ssh-key',
                     disableHostKeyChecking: true,
-                    inventory: "${PROD_INVENTORY}",
+                    inventory: '${PROD_INVENTORY}',
                     playbook: '/home/jenkins/agent/workspace/17636-playbook.yaml',
                     extraVars: [ git_hash: "${env.GIT_COMMIT}" ]
                 )
