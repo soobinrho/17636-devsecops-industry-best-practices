@@ -45,7 +45,7 @@ graph TD;
 | **ZAP (Zed Attack Proxy)** | http://localhost:8081 |
 | **Prometheus** | http://localhost:9090 |
 | **Grafana** | http://localhost:3000 |
-| **Java Spring Petclinic Web App** | http://\<PROD\>:80 |
+| **Java Spring Petclinic Web App** | http://\<PROD\>:8080 |
 
 <br>
 
@@ -57,6 +57,7 @@ graph TD;
 # ==================================
 git clone https://github.com/soobinrho/17636-devsecops-industry-best-practices
 cd 17636-devsecops-industry-best-practices
+git submodule update --init --recursive
 
 # The entirety of the piepeline has been scripted using Make. Under the hood,
 # `./Makefile` deploys and configures Jenkins based on the user-defined username

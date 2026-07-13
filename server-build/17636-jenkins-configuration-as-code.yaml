@@ -23,7 +23,7 @@ jenkins:
           ssh:
             credentialsId: "17636-jenkins-ssh-agent-key"
             host: "17636-jenkins-ssh-agent"
-            port: 2222
+            port: 22
             sshHostKeyVerificationStrategy:
               manuallyTrustedKeyVerificationStrategy:
                 requireInitialManualTrust: false
@@ -102,8 +102,8 @@ jobs:
           // Reference: https://github.com/jenkinsci/job-dsl-plugin/wiki/Migration#migrating-to-172
           pipelineTriggers {
             triggers {
-              cron {
-                spec('* * * * *')
+              pollSCM {
+                scmpoll_spec('* * * * *')
               }
             }
           }
@@ -116,11 +116,6 @@ jobs:
                   url('https://github.com/soobinrho/17636-devsecops-industry-best-practices')
                 }
                 branches('*/main')
-                extensions {
-                  submoduleOptions {
-                    recursive(true)
-                  }
-                }
               }
             }
             scriptPath('./server-build/Jenkinsfile') 
