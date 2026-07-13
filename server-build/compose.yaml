@@ -3,6 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.jenkins
+    image: soobinrho/17636-jenkins
     ports:
       - "8080:8080"
       - "50000:50000"
@@ -26,6 +27,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.jenkins-ssh-agent
+    image: soobinrho/17636-jenkins-ssh-agent
     ports:
       - "22:22"
     networks:

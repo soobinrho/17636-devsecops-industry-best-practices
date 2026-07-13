@@ -153,7 +153,8 @@ clean:
 	  docker compose down --remove-orphans || true
 
 clean-remove-volumes:
-	docker volume ls -q --filter 'name=17636-*' | xargs docker volume rm
+	docker volume ls -q --filter 'name=17636-*' | \
+		sort | uniq --unique | xargs docker volume rm
 	rm -f ./server-build/.env.jenkins
 	rm -f ./server-build/.env.jenkins-ssh-agent
 	rm -f ./server-build/.env.grafana
@@ -163,8 +164,8 @@ clean-remove-volumes:
 	rm -f ./server-build/17636-sonarqube-token.key
 
 clean-remove-images:
-	docker images -aq --filter 'reference=soobinrho/17636-*' \
-		| xargs docker image rm --force
+	docker images -aq --filter 'reference=soobinrho/17636-*' | \
+		sort | uniq --unique | xargs docker image rm --force
 
 test-sh-in-sonarqube:
 	cd server-build && \
