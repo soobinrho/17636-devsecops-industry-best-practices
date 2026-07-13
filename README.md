@@ -93,7 +93,7 @@ echo '<GENERATED_SSH_PUBLIC_KEY>' >> ~/.ssh/authorized_keys
 
 ```txt
 # 17636-prod-ansible-inventory example.
-# Comma at the end is so that Ansible knows it's not a file path.
+# Comma at the end is required. Otherwise, Ansible will think it's a file path.
 192.168.40.214,
 ```
 
