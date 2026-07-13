@@ -14,10 +14,12 @@
         cmd: git submodule update --init --recursive
         chdir: /home/jenkins/17636
 
-    - name: Deploy the petclinic web app
-      ansible.builtin.shell: >
-        cd /home/jenkins/17636/spring-petclinic && \
-        ./mvnw spring-boot:stop && \
-        ./mvnw spring-boot:start
+    - name: Stop the current instance of the petclinic web app
+      ansible.builtin.shell: cd /home/jenkins/17636/spring-petclinic && ./mvnw spring-boot:stop
+      args:
+        executable: /bin/bash
+
+    - name: Deploy petclinic
+      ansible.builtin.shell: cd /home/jenkins/17636/spring-petclinic && ./mvnw spring-boot:start
       args:
         executable: /bin/bash
