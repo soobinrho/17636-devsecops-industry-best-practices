@@ -301,7 +301,7 @@
           "disableTextWrap": false,
           "editorMode": "builder",
           "exemplar": false,
-          "expr": "avg by(cpu) (node_cpu_seconds_total{mode=\"system\"})",
+          "expr": "avg by(cpu) (node_cpu_seconds_total{mode=\"user\"})",
           "format": "time_series",
           "fullMetaSearch": false,
           "hide": false,
