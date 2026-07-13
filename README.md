@@ -2,11 +2,9 @@
 
 `17636-D | 2026 | Professor Jonathan Aldrich | Soobin Rho`
 
-> I recommend you to read this file from GitHub: https://github.com/soobinrho/17636-devsecops-industry-best-practices
-
 <br>
 
-In this assignment, I deployed a Spring Boot sample project called Petclinic with a DevSecOps pipeline:
+In this assignment, I learned how to deploy a web app using the industry best practices for DevSecOps.
 
 <br>
 
@@ -20,36 +18,34 @@ In this assignment, I deployed a Spring Boot sample project called Petclinic wit
 | **Ansible** | Enables Infrastructure as Code. Used for deployment to the prod server. |
 
 <br>
-<br>
-
-> Automation is critical to supply chain security. Automating as much of the software supply chain as possible can significantly reduce the possibility of human error and configuration drift ...
-> <br><br>
-> The build environments used in a supply chain should be clearly
-defined, with limited scope. The human and machine identities operating
-in those environments should be granted only the minimum permissions
-required to complete their assigned tasks ...
-> <br><br>
-> All entities operating in the supply chain environment must be required to mutually authenticate using hardened authentication mechanisms with regular key rotation.
-> <br><br>
-> \- "Deployment and Operations for Software Engineers" by Len Bass and John Klein
-
-<br>
 
 ## Overview
 
-Whenever a commit is pushed to the `main` branch of this repository, Jenkins starts a CI/CD pipeline.
+The Jenkins instance polls this repository every hour and when a change is detected, it triggers a CI/CD pipeline as follows:
 
+<br>
+<!-- This wouldn't make sense if you're using a text editor to read this. -->
+<!-- For better readability, plesae feel free to open this from my GitHub: -->
+<!--   https://github.com/soobinrho/17636-devsecops-industry-best-practices -->
+
+```mermaid
+graph TD;
+    A["Repository Checkout\n(Jenkins SSH Node)"]-->B[["Static Analysis\n(SonarQube)"]];
+    B-->C[["Vulnerability Scanning\n(ZAP and OWASP PTK)"]];
+    C-->D[["Web App Container Build\n(Docker)"]]
+    D-->E["Prod Deployment\n(Ansible)"]
+    A<-->|"Monitoring\n(Prometheus and Grafana)"| E
 ```
-1. Repository Checkout (Git)
-->
-2. Static Analysis (SonarQube)
-->
-3. Vulnerability Scanning and Penetration Testing (ZAP and OWASP PTK)
-->
-4. Petclinic Web App Container Image Build (Docker)
-->
-5. Prod Deployment (Ansible)
-```
+<br>
+
+| Service | Location |
+| --------| ------- |
+| **Jenkins** | http://localhost:8080 |
+| **SonarQube** | http://localhost:9000 |
+| **ZAP (Zed Attack Proxy)** | http://localhost:8081 |
+| **Prometheus** | http://localhost:9090 |
+| **Grafana** | http://localhost:3000 |
+| **Java Spring Petclinic Web App** | http://\<PROD\>:80 |
 
 <br>
 
@@ -94,14 +90,19 @@ sudo apt install openjdk-21-jdk
 # communicate with the Jenkins container even though they were placed in the
 # same Docker Compose network. Whenever manual plumbing is required in cases
 # like these, we can open up a shell session in each of the containers:
-make test-sh-in-jenkins-ssh-agent
+make test-sh-in-sonarqube
 make test-sh-in-jenkins-ssh-agent
 make test-sh-in-jenkins
+make test-sh-in-zap
+make test-sh-in-prometheus-node-exporter
+make test-sh-in-postgr
 
 # Whenever I implement a new feature, I use this one-liner to remove all Docker
-# volumes, build all required Docker images, and deploy them from scratch to
-# test if the codebase works in a clean slate.
+# volumes, build all required Docker images, and deploy in a clean slate.
 make reset
+
+# How to check the logs of all the services deployed via Docker Compose.
+make logs
 
 # How to clean up all Docker volumes and images for this assignment afterwards.
 make clean clean-remove-volumes clean-remove-images
@@ -110,6 +111,19 @@ make clean clean-remove-volumes clean-remove-images
 <br>
 
 ## Resources
+
+> Automation is critical to supply chain security. Automating as much of the software supply chain as possible can significantly reduce the possibility of human error and configuration drift ...
+> <br><br>
+> The build environments used in a supply chain should be clearly
+defined, with limited scope. The human and machine identities operating
+in those environments should be granted only the minimum permissions
+required to complete their assigned tasks ...
+> <br><br>
+> All entities operating in the supply chain environment must be required to mutually authenticate using hardened authentication mechanisms with regular key rotation.
+> <br><br>
+> \- "Deployment and Operations for Software Engineers" by Len Bass and John Klein
+
+<br>
 
 - **The CNCF Security Technical Advisory Group's Supply Chain Best Practices**: https://github.com/cncf/tag-security#publications
 - **NSA / CISA Kubernetes Hardening Guide**: https://media.defense.gov/2022/Aug/29/2003066362/-1/-1/0/CTR_KUBERNETES_HARDENING_GUIDANCE_1.2_20220829.PDF
