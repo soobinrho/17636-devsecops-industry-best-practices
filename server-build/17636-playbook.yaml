@@ -8,6 +8,7 @@
         dest: /home/jenkins/17636
         version: "{{ git_hash }}"
         recursive: false
+        force: true
 
     - name: Checkout the git submodule for petclinic
       ansible.builtin.shell:
