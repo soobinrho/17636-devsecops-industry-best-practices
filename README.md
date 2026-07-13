@@ -98,6 +98,23 @@ echo '<GENERATED_SSH_PUBLIC_KEY>' >> ~/.ssh/authorized_keys
 
 <br>
 
+```txt
+# 17636-prod-ansible-inventory example.
+# Comma at the end is so that Ansible knows it's not a file path.
+192.168.40.214,
+```
+
+<br>
+
+```txt
+# 17636-prod-ssh-key example.
+-----BEGIN OPENSSH PRIVATE KEY-----
+<SNIP>
+-----END OPENSSH PRIVATE KEY-----
+```
+
+<br>
+
 ## Useful Debugging Workflows
 
 ```bash
