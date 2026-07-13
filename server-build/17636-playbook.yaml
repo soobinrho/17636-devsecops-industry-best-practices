@@ -1,20 +1,22 @@
 ---
 - name: Depoy the Petclinic Web App
   hosts: all
-  become: true
   tasks:
     - name: Checkout the repository
       ansible.builtin.git:
         repo: 'https://github.com/soobinrho/17636-devsecops-industry-best-practices.git'
-        dest: /app
+        dest: /home/jenkins/17636
         version: "{{ git_hash }}"
-        depth: 1
-        recursive: true
-        track_submodules: true
+        recursive: false
+
+    - name: Checkout the git submodule for petclinic
+      ansible.builtin.command:
+        cmd: git submodule update --init --recursive
+        chdir: /home/jenkins/17636
 
     - name: Build the Petclinic Docker image
       ansible.builtin.shell: >
-        cd /app/spring-petclinic &&
+        cd /home/jenkins/17636/spring-petclinic &&
         ./mvnw spring-boot:build-image -Dspring-boot.build-image.imageName='soobinrho/17636-petclinic:latest'
       args:
         executable: /bin/bash
@@ -22,11 +24,11 @@
     - name: Transfer the Petclinic web app and database credentials
       ansible.builtin.copy:
         src: /home/jenkins/agent/workspace/.env.petclinic
-        dest: /app/server-prod/.env.petclinic
+        dest: /home/jenkins/17636/server-prod/.env.petclinic
         mode: '0600'
 
     - name: Deploy the pet clinic web app consisting of Spring and Postgres
       community.docker.docker_compose_v2:
-        project_src: /app/server-prod
+        project_src: /home/jenkins/17636/server-prod
         state: present
 
