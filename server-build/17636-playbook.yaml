@@ -10,16 +10,18 @@
         recursive: false
 
     - name: Checkout the git submodule for petclinic
-      ansible.builtin.command:
-        cmd: git submodule update --init --recursive
+      ansible.builtin.shell:
+        cmd: "git submodule update --init --recursive"
         chdir: /home/jenkins/17636
 
     - name: Stop the current instance of the petclinic web app
-      ansible.builtin.shell: cd /home/jenkins/17636/spring-petclinic && ./mvnw spring-boot:stop
-      args:
-        executable: /bin/bash
+      ansible.builtin.shell:
+        cmd: "./mvnw spring-boot:stop"
+        chdir: /home/jenkins/17636/spring-petclinic
 
     - name: Deploy petclinic
-      ansible.builtin.shell: cd /home/jenkins/17636/spring-petclinic && ./mvnw spring-boot:start
-      args:
-        executable: /bin/bash
+      ansible.builtin.shell:
+        cmd: "nohup ./mvnw spring-boot:run > petclinic.log 2>&1 &"
+        chdir: /home/jenkins/17636/spring-petclinic
+      async: 10
+      poll: 0
