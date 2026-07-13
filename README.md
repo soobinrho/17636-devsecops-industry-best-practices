@@ -49,9 +49,12 @@ graph TD;
 
 <br>
 
-## How to deploy
+## Deployment
 
 ```bash
+# ==================================
+# How to deploy this CI/CD pipeline.
+# ==================================
 git clone https://github.com/soobinrho/17636-devsecops-industry-best-practices
 cd 17636-devsecops-industry-best-practices
 
@@ -65,20 +68,31 @@ cd 17636-devsecops-industry-best-practices
 # credentials (SSH private key for the Jenkins SSH agent and Jenkins login creds).
 make start-build-pipeline
 
-# WIP
-pip install --include-deps ansible
+# ============================================
+# [Optional] How to provision the prod server.
+# ============================================
+# For the prod server, Ansible will take care of the web app deployment steps, but
+# the Ansible prerequisites need to be met.
 
-# Required for running `docker compose up`
-ansible-galaxy collection install community.docker
+# 1. Spin up the prod server. I used an Ubuntu image on VirtualBox for example.
+# 2. Create a jenkins user.
+useradd --create-home --password<PASSWORD> -s /bin/bash jenkins
 
-# Required for installing Docker Compose on the prod server.
-ansible-galaxy role install geerlingguy.docker
+# 3. Install Docker. I choose not to let Ansible do this because installing a package
+#    like Docker via Ansible usually requires sudo privileges. This way, the jenkins
+#    user does not need to have sudo privileges.
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh ./get-docker.sh
+sudo usermod -aG docker jenkins
 
-# TODO: Run these in Ansible.
+# 4. Instal the SSH server and OpenJDK.
+sudo apt update
+sudo apt install openssh-server default-jdk -y
 
-# Install the latest LTS (Long Term Support) version of OpenJDK,
-# which as of now is OpenJDK 21.
-sudo apt install openjdk-21-jdk
+# 5. Generate an SSH key pair and then add to the authorized users.
+#    Then, add the private key to Jenkins credentials as `17636-prod-ssh-key`.
+#    Also, add the prod server's location to `17636-prod-ansible-inventory`.
+echo '<GENERATED_SSH_PUBLIC_KEY>' >> ~/.ssh/authorized_keys
 ```
 
 <br>

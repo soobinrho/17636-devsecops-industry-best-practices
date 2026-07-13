@@ -16,7 +16,7 @@ services:
     17636-postgres:
       condition: service_healthy
 
-   17636-postgres:
+  17636-postgres:
   image: postgres:18.4
   ports:
     - "5432:5432"
@@ -34,7 +34,7 @@ services:
     test: ["CMD-SHELL", "pg_isready", "-d", "petclinic", "-U", "petclinic"]
     interval: 2s
     timeout: 5s
-    retries: 20
+    retries: 50
 
 networks:
   network-petclinic:
