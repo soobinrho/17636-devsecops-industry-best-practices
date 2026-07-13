@@ -103,7 +103,7 @@ jobs:
           pipelineTriggers {
             triggers {
               cron {
-                spec('@hourly')
+                spec('* * * * *')
               }
             }
           }
