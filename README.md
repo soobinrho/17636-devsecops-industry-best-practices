@@ -31,7 +31,7 @@ The Jenkins instance polls this repository every minute and when a change is det
 ```mermaid
 graph TD;
     A["Repository Checkout\n(Jenkins SSH Node)"]-->B[["Static Analysis\n(SonarQube)"]];
-    B-->C[["Build/n(Java Spring Maven)"]];
+    B-->C[["Build\n(Java Spring Maven)"]];
     C-->D[["Penetration Testing\n(ZAP and OWASP PTK)"]]
     D-->E["Prod Deployment\n(Ansible)"]
     A<-->|"Monitoring\n(Prometheus and Grafana)"| E

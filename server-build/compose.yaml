@@ -33,8 +33,6 @@ services:
     volumes:
       - ./17636-playbook.yaml:/home/jenkins/agent/workspace/17636-playbook.yaml
       - ./.env.petclinic:/home/jenkins/agent/workspace/.env.petclinic
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     env_file:
       - ./.env.jenkins-ssh-agent
       - ./.env.petclinic
