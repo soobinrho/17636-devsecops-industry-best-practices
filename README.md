@@ -12,7 +12,7 @@ In this assignment, I learned how to deploy a web app using the industry best pr
 | --------| ------- |
 | **Jenkins** | Enables continuous integration and continuous delivery. |
 | **SonarQube** | Performs static analysis on the codebase. |
-| **ZAP (Zed Attack Proxy)** | Conducts vulnerability scanning and penetration testing on a live web application as a security analysis part of the DevSecOps. Supports a myriad of plugins including reporting generation tools and OWASP PTK (Penetration Testing Kit). |
+| **ZAP (Zed Attack Proxy)** | Conducts vulnerability scanning and penetration testing on a live web application as a security analysis part of the DevSecOps. Supports a myriad of plugins including report generation and OWASP PTK (Penetration Testing Kit). |
 | **Prometheus** | Metrics data collection toolkit. Also supports alerts based on custom rules. |
 | **Grafana** | Monitoring and data visualization platform that can ingest data from Prometheus, Elasticsearch, Postgres, etc. |
 | **Ansible** | Enables Infrastructure as Code. Used for deployment to the prod server. |
@@ -65,8 +65,8 @@ git submodule update --init --recursive
 # as a Jenkins node so that it can be used for all pipeline activities.
 
 # All required Jenkins plugins are installed at Docker image build stage using
-# the Jenkins Configuration as Code plugin, as well as all of the required username
-# credentials (SSH private key for the Jenkins SSH agent and Jenkins login creds).
+# the Jenkins Configuration as Code plugin, as well as all of the required credentials
+# (SSH private key for the Jenkins SSH agent and Jenkins admin username and password).
 make start-build-pipeline
 
 # ============================================
@@ -79,18 +79,11 @@ make start-build-pipeline
 # 2. Create a jenkins user.
 useradd --create-home --password<PASSWORD> -s /bin/bash jenkins
 
-# 3. Install Docker. I choose not to let Ansible do this because installing a package
-#    like Docker via Ansible usually requires sudo privileges. This way, the jenkins
-#    user does not need to have sudo privileges.
-curl -fsSL https://get.docker.com -o get-docker.sh
-sudo sh ./get-docker.sh
-sudo usermod -aG docker jenkins
-
-# 4. Instal the SSH server and OpenJDK.
+# 3. Install the SSH server and OpenJDK.
 sudo apt update
 sudo apt install openssh-server default-jdk -y
 
-# 5. Generate an SSH key pair and then add to the authorized users.
+# 4. Generate an SSH key pair and then add to the authorized users.
 #    Then, add the private key to Jenkins credentials as `17636-prod-ssh-key`.
 #    Also, add the prod server's location to `17636-prod-ansible-inventory`.
 echo '<GENERATED_SSH_PUBLIC_KEY>' >> ~/.ssh/authorized_keys
@@ -121,7 +114,7 @@ echo '<GENERATED_SSH_PUBLIC_KEY>' >> ~/.ssh/authorized_keys
 # A bug that took me hours to fix was where SonarQube container wasn't able to
 # communicate with the Jenkins container even though they were placed in the
 # same Docker Compose network. Whenever manual plumbing is required in cases
-# like these, we can open up a shell session in each of the containers:
+# like this, we can open up a shell session in each of the containers for debugging:
 make test-sh-in-sonarqube
 make test-sh-in-jenkins-ssh-agent
 make test-sh-in-jenkins
@@ -129,14 +122,14 @@ make test-sh-in-zap
 make test-sh-in-prometheus-node-exporter
 make test-sh-in-postgr
 
-# Whenever I implement a new feature, I use this one-liner to remove all Docker
-# volumes, build all required Docker images, and deploy in a clean slate.
+# Whenever I implement a new feature, I use this one-liner to deploy everything in
+# a clean state by recreating all Docker volumes and then rebuilding the images.
 make reset
 
-# How to check the logs of all the services deployed via Docker Compose.
+# View the live logs on Docker Compose.
 make logs
 
-# How to clean up all Docker volumes and images for this assignment afterwards.
+# How to clean up all artifacts:
 make clean clean-remove-volumes clean-remove-images
 ```
 
