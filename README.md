@@ -21,7 +21,7 @@ In this assignment, I learned how to deploy a web app using the industry best pr
 
 ## Overview
 
-The Jenkins instance polls this repository every minute and when a change is detected, it triggers a CI/CD pipeline as follows:
+The Jenkins instance polls this repository every minute and when a change is detected, it triggers a [CI/CD pipeline](https://youtu.be/87gMijdSRVY) as follows:
 
 <br>
 <!-- This wouldn't make sense if you're using a text editor to read this. -->
